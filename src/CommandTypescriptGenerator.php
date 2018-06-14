@@ -8,11 +8,11 @@ use Illuminate\Routing\Router;
 use Tightenco\Ziggy\BladeRouteGenerator;
 use Tightenco\Ziggy\RoutePayload;
 
-class CommandRouteGenerator extends Command
+class CommandTypescriptGenerator extends Command
 {
-    protected $signature = 'ziggy:generate {path=./resources/assets/js/ziggy.js}';
+    protected $signature = 'ziggy:typescript {path=./resources/assets/js/types/ziggy.d.ts}';
 
-    protected $description = 'Generate js file for including in build process';
+    protected $description = 'Generate a TypeScript definition file';
 
     protected $baseUrl;
     protected $baseProtocol;
@@ -44,25 +44,17 @@ class CommandRouteGenerator extends Command
     {
         $this->prepareDomain();
 
-        $json = $this->getRoutePayload($group)->toJson();
-        
-        $defaultParameters = method_exists(app('url'), 'getDefaultParameters') ? json_encode(app('url')->getDefaultParameters()) : '[]';
+        /** @var \Illuminate\Support\Collection $routePayload */
+        $routePayload = $this->getRoutePayload($group);
 
-        return <<<EOT
-    var Ziggy = {
-        namedRoutes: $json,
-        baseUrl: '{$this->baseUrl}',
-        baseProtocol: '{$this->baseProtocol}',
-        baseDomain: '{$this->baseDomain}',
-        basePort: {$this->basePort},
-        defaultParameters: $defaultParameters
-    };
+        $urlGenerator = app('url');
+        $defaultParameters = method_exists($urlGenerator, 'getDefaultParameters') ? $urlGenerator->getDefaultParameters() : [];
 
-    export {
-        Ziggy
-    }
+        $routePayload->pluck('uri')->map(function($data, $key) use($defaultParameters){
+            dd($data, $key);
+        });
 
-EOT;
+        $stub = $this->files->get(__DIR__.'/stubs/ziggy.routes.d.ts.stub');
     }
 
     private function prepareDomain()

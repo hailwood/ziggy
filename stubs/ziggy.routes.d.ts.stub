@@ -1,0 +1,34 @@
+declare module 'js/routes' {
+
+  type StringOrNumber = string | number;
+  type RequestMethod = 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT';
+  type RouteParamValue = { id: StringOrNumber, [key: string]: StringOrNumber } | StringOrNumber | (StringOrNumber|{id: StringOrNumber})[];
+  type OptionalRouteParams = { [key: string]: RouteParamValue } | undefined;
+
+  export type Ziggy = {
+    namedRoutes: {
+      [key: string]: {
+        uri: string,
+        methods: RequestMethod[],
+        domain?: string | null
+      }
+    },
+    baseUrl: string,
+    baseProtocol: 'http' | 'https',
+    baseDomain: string,
+    basePort: number | false,
+    defaultParameters: any,
+  };
+
+
+  export type RouteParamMap = {
+    //command.injection.point\\
+  }
+
+  export default function route<RouteName extends keyof RouteParamMap>(
+    name: RouteName,
+    params?: RouteParamMap[RouteName],
+    absolute?: boolean,
+    customZiggy?: any
+  ): string
+}

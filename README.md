@@ -222,6 +222,20 @@ export {
 }
 ```
 
+## TypeScript artisan command
+
+Ziggy also publishes an artisan command to generate a `ziggy.d.ts` file, which can be used to provide TypeScript with the neccesary information regarding the route helper.
+
+You can run `php artisan ziggy:typescript` in your project to generate a static routes file in `resources/assets/js/types/ziggy.d.ts`.
+
+Optionally, include a second parameter to override the path and file names (you must pass a file name with the path)
+
+## Publish assets command
+
+If you need access to the uncompiled JavaScript (`route()` helper, `UrlBuilder` class, and `Router` class) you may run 
+`php artisan vendor:publish --provider=Tightenco\\Ziggy\\ZiggyServiceProvider --tag=resources` in your project to publish them to
+`resources/assets/js/ziggy/`.
+
 ## Environment-based loading of minified route helper file
 
 When loading the blade helper file, Ziggy will detect the current environment and minify the output if `APP_ENV` is not `local`.

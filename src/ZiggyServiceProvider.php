@@ -22,8 +22,13 @@ class ZiggyServiceProvider extends ServiceProvider
             return "<?php echo app('" . BladeRouteGenerator::class . "')->generate({$group}); ?>";
         });
 
-        if ($this->app->runningInConsole()) {
+        $this->publishes([
+            __DIR__.'/js' => resource_path('assets/js/ziggy'),
+        ], 'resources');
+
+        if (true || $this->app->runningInConsole()) {
             $this->commands([
+                CommandTypescriptGenerator::class,
                 CommandRouteGenerator::class,
             ]);
         }
